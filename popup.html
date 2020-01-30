@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+
+<style>
+html {
+  background-color: #222;
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  background-color: #444;
+  height: 500px;
+  width: 500px;
+}
+.files {
+  width: 150px;
+  margin: 10px;
+}
+select {
+  width: 100%;
+  height: calc(100% - 20px);
+}
+.options {
+  display: flex;
+  color: white;
+  font-size: large;
+  margin: 5px 0;
+}
+.options > span {
+  margin: 0 5px;
+  user-select: none;
+  cursor: pointer;
+}
+.editor {
+  flex: 1 1 auto;
+  margin: 10px 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+}
+input {
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+textarea {
+  border-radius: 5px;
+  flex: 1 1 auto;
+  resize: none;
+  font-family: 'Nova Mono', monospace;
+}
+</style>
+
+
+<link href="https://fonts.googleapis.com/css?family=Overpass+Mono&display=swap" rel="stylesheet">
+
+
+<div class="content" id="content">
+  <div class="files">
+    <select id="file-list" size="1000"></select>
+    <div class="options">
+      <span id="execute-button">E</span>
+      <select id="execution-trigger" style="flex: 1 1 auto;">
+        <option>None</option>
+        <option>OnLoadComplete</option>
+      </select>
+      <span id="add-button" style="margin-top: -2px;">+</span>
+      <span id="remove-button" style="margin-top: -2px;">-</span>
+    </div>
+  </div>
+
+  <div class="editor">
+    <input id="file-name" type="text">
+    <textarea id="file-content"></textarea>
+  </div>
+</div>
+
+
+<script src="popup.js"></script>
