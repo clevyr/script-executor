@@ -1,0 +1,173 @@
+html, body {
+  margin: 0;
+  height: 500px;
+  width: 700px;
+
+  background-color: #35363a;
+  color: #EEE;
+  fill: #EEE;
+  user-select: none;
+}
+
+body {
+  display: flex;
+}
+
+.scripts {
+  width: 200px;
+  height: 100%;
+  border-right: 1px solid #47484e;
+}
+
+.scripts-header, .content-header {
+  border-bottom: 1px solid #47484e;
+  display: flex;
+  align-items: center;
+  height: 35px;
+}
+
+.scripts-header-title {
+  font-weight: bold;
+  margin: 0.5rem;
+  margin-right: auto;
+}
+
+.scripts-header-action, .content-header-action {
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 100ms ease;
+}
+
+.scripts-header-action:hover, .content-header-action:hover {
+  background-color: #47484e;
+}
+
+.scripts-list {
+  max-height: 464px;
+  overflow: auto;
+}
+
+.scripts-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #47484e;
+  cursor: pointer;
+  transition: background-color 100ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 1rem;
+}
+
+.scripts-item:hover {
+  background: #3c3d42;
+}
+
+.scripts-item.active {
+  background: #47484e;
+}
+
+.content {
+  width: 499px;
+  display: flex;
+  flex-flow: column;
+}
+
+.content-header {
+}
+
+.content-header-title {
+  width: 300px;
+  margin: 0.5rem;
+  margin-right: auto;
+  background: none;
+  color: #EEE;
+  border: none;
+}
+
+.content-editor {
+  flex: 1;
+}
+
+.CodeMirror {
+  max-height: 464px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-placeholder-text {
+  color: #6e6f72;
+}
+
+.hide {
+  display: none;
+}
+
+@media (prefers-color-scheme: light) {
+  html, body {
+    background-color: #FFF;
+    color: #222;
+    fill: #222;
+  }
+
+  .scripts {
+    border-right: 1px solid #cfd0d1;
+  }
+
+  .scripts-header, .content-header {
+    border-bottom: 1px solid #cfd0d1;
+  }
+
+  .scripts-header-action:hover, .content-header-action:hover {
+    background-color: #cfd0d1;
+  }
+
+  .scripts-item {
+    border-bottom: 1px solid #cfd0d1;
+  }
+
+  .scripts-item:hover {
+    background: #dddede;
+  }
+
+  .scripts-item.active {
+    background: #cfd0d1;
+  }
+
+  .content-header-title {
+    color: #222;
+  }
+
+  .content-placeholder-text {
+    color: #6e6f72;
+  }
+
+  .cm-s-material.CodeMirror {
+    background-color: #FFFFFF;
+    color: #222;
+  }
+
+  .cm-s-material .CodeMirror-gutters {
+    background: #FFFFFF;
+    color: #777;
+    border: none;
+  }
+
+  .cm-s-material .CodeMirror-guttermarker,
+  .cm-s-material .CodeMirror-guttermarker-subtle,
+  .cm-s-material .CodeMirror-linenumber {
+    color: #777;
+  }
+}

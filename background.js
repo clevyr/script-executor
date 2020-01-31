@@ -1,15 +1,16 @@
+var ext = chrome || browser;
+
 function executeScripts(tabId, url, trigger) {
-  const domain = new URL(url).hostname;
-  chrome.storage.sync.get([domain], function(data) {
-    if (!data[domain] || !data[domain].files || !data[domain].files.length) return;
-    for (const file of data[domain].files) {
-      if (file.trigger == trigger) {
-        chrome.tabs.executeScript(tabId, { code: file.content });
-      }
+  var activeHost = new URL(url).host;
+  chrome.storage.sync.get(activeHost, function(scripts) {
+    if (scripts && scripts[activeHost]) {
+      Object.values(data[domain]).forEach(function(script) {
+        chrome.tabs.executeScript(tabId, { code: script.content });
+      });
     }
   });
 }
 
-chrome.webNavigation.onCompleted.addListener(function(details) {
+ext.webNavigation.onCompleted.addListener(function(details) {
   executeScripts(details.tabId, details.url, 'OnLoadComplete');
 });
