@@ -9,7 +9,9 @@
     "webNavigation",
     "tabs",
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "menus",
+    "contextMenus"
   ],
   "background": {
     "scripts": [

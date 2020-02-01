@@ -81,13 +81,21 @@ body {
 .content-header {
 }
 
-.content-header-title {
+.content-header-title, .content-footer-hostname {
   width: 300px;
-  margin: 0.5rem;
+  margin: 0.25rem;
   margin-right: auto;
   background: none;
   color: #EEE;
   border: none;
+  padding: 0.25rem;
+  outline: none;
+  transition: all 100ms ease;
+  border: 1px solid rgba(0,0,0,0);
+}
+
+.content-header-title:focus, .content-footer-hostname:focus {
+  border: 1px solid #47484e;
 }
 
 .content-editor {
@@ -95,9 +103,29 @@ body {
 }
 
 .CodeMirror {
-  max-height: 464px;
+  max-height: 428px;
   height: 100%;
   overflow: hidden;
+}
+
+.content-footer {
+  border-top: 1px solid #47484e;
+  display: flex;
+  align-items: center;
+  height: 35px;
+}
+
+.content-footer-mode {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  background: none;
+  border: none;
+  color: #EEE;
+  text-align: right;
+  margin: 0.5rem;
+  padding: 0.25rem;
 }
 
 .content-placeholder {
@@ -148,6 +176,10 @@ body {
 
   .content-header-title {
     color: #222;
+  }
+
+  .content-footer {
+    border-top: 1px solid #cfd0d1;
   }
 
   .content-placeholder-text {

@@ -12,6 +12,8 @@ var els = {
   content: document.querySelector('.content'),
   contentPlaceholder: document.querySelector('.content-placeholder'),
   contentNameInput: document.querySelector('.content-header-title'),
+  contentHostnameInput: document.querySelector('.content-footer-hostname'),
+  contentModeSelect: document.querySelector('.content-footer-mode'),
   deleteButton: document.querySelector('.action-delete'),
   executeButton: document.querySelector('.action-execute'),
   createButton: document.querySelector('.action-create')
@@ -58,16 +60,16 @@ function removeScript(id) {
 }
 
 function saveScripts() {
-  ext.storage.sync.set({ [state.activeHost]: state.scripts });
+  ext.storage.sync.set({ scripts: state.scripts });
 }
 
 function loadScripts() {
   state.scripts = {};
   els.scriptsList.innerHTML = '';
 
-  ext.storage.sync.get(state.activeHost, function(scripts) {
-    if (scripts && scripts[state.activeHost]) {
-      Object.values(scripts[state.activeHost]).forEach(function(script) {
+  ext.storage.sync.get('scripts', function(data) {
+    if (data && data.scripts) {
+      Object.values(data.scripts).forEach(function(script) {
         addScript(script.id, script);
       });
     }
@@ -82,6 +84,8 @@ function selectScript(id) {
 
   if (state.activeScript) {
     els.contentNameInput.value = state.scripts[state.activeScript].name;
+    els.contentHostnameInput.value = state.scripts[state.activeScript].hostname;
+    els.contentModeSelect.value = state.scripts[state.activeScript].mode;
     editor.setValue(state.scripts[state.activeScript].content);
 
     els.contentPlaceholder.classList.add('hide');
@@ -100,7 +104,9 @@ function onCreate() {
   var script = {
     id: Date.now() + '',
     name: 'My new script',
-    content: 'console.log(\'Hello World\');'
+    content: 'console.log(\'Hello World\');',
+    hostname: '*',
+    mode: 'none'
   };
   addScript(script.id, script);
   selectScript(script.id);
@@ -137,6 +143,24 @@ function onContentChange(event) {
   updateScript(script.id, script);
 }
 
+function onHostnameChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.hostname = event.target.value;
+
+  updateScript(script.id, script);
+}
+
+function onModeChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.mode = event.target.value;
+
+  updateScript(script.id, script);
+}
+
 // Utility
 
 function createElement(type, attributes) {
@@ -157,6 +181,8 @@ function createElement(type, attributes) {
   els.deleteButton.addEventListener('click', onDelete);
   els.executeButton.addEventListener('click', onExecute);
   els.contentNameInput.addEventListener('input', onNameChange);
+  els.contentHostnameInput.addEventListener('input', onHostnameChange);
+  els.contentModeSelect.addEventListener('input', onModeChange);
   editor.on('change', onContentChange);
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(v) {
