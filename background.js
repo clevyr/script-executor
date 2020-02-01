@@ -4,7 +4,7 @@ function executeScripts(tabId, url, trigger) {
   var activeHost = new URL(url).host;
   chrome.storage.sync.get(activeHost, function(scripts) {
     if (scripts && scripts[activeHost]) {
-      Object.values(data[domain]).forEach(function(script) {
+      Object.values(scripts[activeHost]).forEach(function(script) {
         chrome.tabs.executeScript(tabId, { code: script.content });
       });
     }
