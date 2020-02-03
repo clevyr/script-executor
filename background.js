@@ -1,7 +1,7 @@
 var ext = chrome || browser;
 
 function executeScripts(tabId, hostname) {
-  chrome.storage.sync.get('scripts', function(data) {
+  ext.storage.sync.get('scripts', function(data) {
     if (!data || !data.scripts) return;
 
     Object.values(data.scripts)
@@ -10,7 +10,7 @@ function executeScripts(tabId, hostname) {
         return script.mode === 'pageload';
       })
       .forEach(function(script) {
-        chrome.tabs.executeScript(tabId, { code: script.content });
+        ext.tabs.executeScript(tabId, { code: script.content });
       });
   });
 }
@@ -24,7 +24,7 @@ function updateContextMenus(hostname) {
 function _updateContextMenus(hostname) {
   ext.contextMenus.removeAll();
 
-  chrome.storage.sync.get('scripts', function(data) {
+  ext.storage.sync.get('scripts', function(data) {
     if (!data || !data.scripts) return;
 
     Object.values(data.scripts)
@@ -53,7 +53,7 @@ ext.webNavigation.onCompleted.addListener(function(details) {
 });
 
 ext.tabs.onHighlighted.addListener(function(details) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(v) {
+  ext.tabs.query({ active: true, currentWindow: true }, function(v) {
     var tab = v[0];
     var hostname = new URL(tab.url).host;
 
@@ -62,7 +62,7 @@ ext.tabs.onHighlighted.addListener(function(details) {
 });
 
 ext.storage.onChanged.addListener(function() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(v) {
+  ext.tabs.query({ active: true, currentWindow: true }, function(v) {
     var tab = v[0];
     var hostname = new URL(tab.url).host;
 
@@ -71,11 +71,11 @@ ext.storage.onChanged.addListener(function() {
 });
 
 ext.contextMenus.onClicked.addListener(function(info, tab) {
-  chrome.storage.sync.get('scripts', function(data) {
+  ext.storage.sync.get('scripts', function(data) {
     if (!data || !data.scripts || !data.scripts[info.menuItemId]) return;
 
     var script = data.scripts[info.menuItemId];
-    chrome.tabs.executeScript(tab.id, { code: script.content });
+    ext.tabs.executeScript(tab.id, { code: script.content });
   });
 });
 
