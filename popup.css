@@ -7,6 +7,8 @@ html, body {
   color: #EEE;
   fill: #EEE;
   user-select: none;
+  font-family: sans-serif;
+  font-size: 12px;
 }
 
 body {
@@ -174,12 +176,20 @@ body {
     background: #cfd0d1;
   }
 
-  .content-header-title {
+  .content-header-title, .content-footer-hostname {
     color: #222;
+  }
+
+  .content-header-title:focus, .content-footer-hostname:focus {
+    border: 1px solid #cfd0d1;
   }
 
   .content-footer {
     border-top: 1px solid #cfd0d1;
+  }
+
+  .content-footer-mode {
+    color: #222;
   }
 
   .content-placeholder-text {
