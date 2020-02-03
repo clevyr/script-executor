@@ -6,8 +6,7 @@ function executeScripts(tabId, hostname) {
 
     Object.values(data.scripts)
       .filter(function(script) {
-        // TODO Hostname filter
-        return script.mode === 'pageload';
+        return script.mode === 'pageload' && doesHostnameMatch(hostname, script.hostname);
       })
       .forEach(function(script) {
         ext.tabs.executeScript(tabId, { code: script.content });
@@ -29,8 +28,7 @@ function _updateContextMenus(hostname) {
 
     Object.values(data.scripts)
       .filter(function(script) {
-        // TODO Hostname filter
-        return script.mode === 'context';
+        return script.mode === 'context' && doesHostnameMatch(hostname, script.hostname);
       })
       .forEach(function(script) {
         ext.contextMenus.create({
@@ -83,4 +81,8 @@ var timerId;
 function debounce(func, delay) {
   clearTimeout(timerId)
   timerId = setTimeout(func, delay)
+}
+
+function doesHostnameMatch(hostname, pattern) {
+  return !!new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$').exec(hostname);
 }
