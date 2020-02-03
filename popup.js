@@ -1,148 +1,193 @@
-let key = 0;
-let counter = 1;
-let current;
-let files = [];
-let tab;
-let domain;
-
-const ls = {
-  files: document.getElementById('file-list'),
-  name: document.getElementById('file-name'),
-  execute: document.getElementById('execute-button'),
-  add: document.getElementById('add-button'),
-  remove: document.getElementById('remove-button'),
-  content: document.getElementById('file-content'),
-  trigger: document.getElementById('execution-trigger'),
+var ext = chrome || browser;
+var state = {
+  activeHost: null,
+  activeTab: null,
+  activeScript: null,
+  scripts: {}
 };
 
-function make(type) {
-  return document.createElement(type);
-}
+var els = {
+  textarea: document.querySelector('#codemirror'),
+  scriptsList: document.querySelector('.scripts-list'),
+  content: document.querySelector('.content'),
+  contentPlaceholder: document.querySelector('.content-placeholder'),
+  contentNameInput: document.querySelector('.content-header-title'),
+  contentHostnameInput: document.querySelector('.content-footer-hostname'),
+  contentModeSelect: document.querySelector('.content-footer-mode'),
+  deleteButton: document.querySelector('.action-delete'),
+  executeButton: document.querySelector('.action-execute'),
+  createButton: document.querySelector('.action-create')
+};
 
-function saveFiles() {
-  const params = {};
-  params[domain] = { files: files };
+var editor = CodeMirror.fromTextArea(els.textarea, {
+  lineNumbers: true,
+  tabSize: 2,
+  theme: 'material'
+});
 
-  chrome.storage.sync.set(params, e => {
-    if (e) console.log(e);
+// Scripts
+
+function addScript(id, script) {
+  state.scripts[id] = script;
+
+  var el = createElement('div', {
+    innerHTML: script.name,
+    class: 'scripts-item',
+    'data-id': script.id
   });
+
+  el.addEventListener('click', function() {
+    selectScript(script.id);
+  });
+
+  els.scriptsList.appendChild(el);
+  saveScripts();
 }
 
-function fileChanged(e) {
-  current = null;
-  const model = files.filter(v => v.key == e.target.value)[0];
-  ls.name.value = model.name;
-  ls.content.value = model.content || '';
-  ls.trigger.value = model.trigger || 'None';
-  current = model;
-  ls.content.focus();
-  saveFiles();
+function updateScript(id, script) {
+  state.scripts[id] = script;
+  document.querySelector('[data-id="' + id + '"]').innerHTML = script.name;
+
+  saveScripts();
 }
 
-function triggerChanged() {
-  current.trigger = ls.trigger.value;
+function removeScript(id) {
+  document.querySelector('[data-id="' + id + '"]').remove();
+  delete state.scripts[id];
+  selectScript();
 
-  saveFiles();
+  saveScripts();
 }
 
-function addFileToBox(file) {
-  const option = make('option');
-  option.innerText = file.name;
-  file.key = key++;
-  option.value = file.key;
-  files.push(file);
-  ls.files.appendChild(option);
-  ls.files.value = file.key;
-  fileChanged({ target: option });
+function saveScripts() {
+  ext.storage.sync.set({ scripts: state.scripts });
 }
 
-function filesLoaded(result) {
-  if (!result || !result[domain])
-    return;
+function loadScripts() {
+  state.scripts = {};
+  els.scriptsList.innerHTML = '';
 
-  const files = result[domain].files || [];
-
-  while (ls.files.firstChild) {
-    ls.files.removeChild(ls.files.firstChild);
-  }
-
-  for (const file of files) {
-    addFileToBox(file);
-  }
-}
-
-function addClick() {
-  addFileToBox({ name: `New Item ${counter++}` });
-  ls.name.focus();
-  ls.name.select();
-
-  saveFiles();
-}
-
-function removeClick() {
-  if (!current)
-    return;
-
-  let index = ls.files.selectedIndex;
-
-  ls.files.remove(index);
-  files = files.filter(v => v.key != current.key);
-
-  if (ls.files.length > 0) {
-    if (index >= ls.files.length) {
-      index = ls.files.length - 1;
+  ext.storage.sync.get('scripts', function(data) {
+    if (data && data.scripts) {
+      Object.values(data.scripts).forEach(function(script) {
+        addScript(script.id, script);
+      });
     }
-
-    const option = ls.files.childNodes[index];
-    ls.files.selectedIndex = index;
-    fileChanged({ target: option });
-  } else {
-    ls.name.value = '';
-  }
-
-  saveFiles();
-}
-
-function executeClick() {
-  if (!current)
-    return;
-
-  chrome.tabs.executeScript(tab.id, { code: ls.content.value });
-}
-
-function contentChanged(e) {
-  if (!current)
-    return;
-
-  current.content = ls.content.value;
-
-  saveFiles();
-}
-
-function nameUpdated(e) {
-  if (!current)
-    return;
-
-  current.name = e.target.value;
-  ls.files.options[ls.files.selectedIndex].text = current.name;
-
-  saveFiles();
-}
-
-function initialize() {
-  ls.add.onclick = addClick;
-  ls.remove.onclick = removeClick;
-  ls.execute.onclick = executeClick;
-  ls.files.onclick = fileChanged;
-  ls.name.onchange = nameUpdated;
-  ls.content.onchange = contentChanged;
-  ls.trigger.onchange = triggerChanged;
-
-  chrome.tabs.query({ active: true, currentWindow: true }, v => {
-    tab = v[0];
-    domain = new URL(tab.url).hostname;
-    chrome.storage.sync.get([domain], filesLoaded);
   });
 }
 
-initialize();
+function selectScript(id) {
+  state.activeScript = id;
+
+  var oldActive = document.querySelector('.scripts-item.active');
+  if (oldActive) oldActive.classList.remove('active');
+
+  if (state.activeScript) {
+    els.contentNameInput.value = state.scripts[state.activeScript].name;
+    els.contentHostnameInput.value = state.scripts[state.activeScript].hostname;
+    els.contentModeSelect.value = state.scripts[state.activeScript].mode;
+    editor.setValue(state.scripts[state.activeScript].content);
+
+    els.contentPlaceholder.classList.add('hide');
+    els.content.classList.remove('hide');
+    document.querySelector('[data-id="' + id + '"]').classList.add('active');
+    editor.refresh();
+  } else {
+    els.contentPlaceholder.classList.remove('hide');
+    els.content.classList.add('hide');
+  }
+}
+
+// Event Handlers
+
+function onCreate() {
+  var script = {
+    id: Date.now() + '',
+    name: 'My new script',
+    content: 'console.log(\'Hello World\');',
+    hostname: '*',
+    mode: 'none'
+  };
+  addScript(script.id, script);
+  selectScript(script.id);
+}
+
+function onDelete() {
+  var answer = confirm('Are you sure you want to delete?');
+  if (!answer) return;
+
+  removeScript(state.activeScript);
+}
+
+function onExecute() {
+  if (!state.activeScript) return;
+
+  ext.tabs.executeScript(state.activeTab.id, { code: state.scripts[state.activeScript].content });
+}
+
+function onNameChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.name = event.target.value;
+
+  updateScript(script.id, script);
+}
+
+function onContentChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.content = event.getValue();
+
+  updateScript(script.id, script);
+}
+
+function onHostnameChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.hostname = event.target.value;
+
+  updateScript(script.id, script);
+}
+
+function onModeChange(event) {
+  if (!state.activeScript) return;
+
+  var script = state.scripts[state.activeScript];
+  script.mode = event.target.value;
+
+  updateScript(script.id, script);
+}
+
+// Utility
+
+function createElement(type, attributes) {
+  var el = document.createElement(type);
+  for (var attr in attributes) {
+    if (attr === 'innerHTML') continue;
+
+    el.setAttribute(attr, attributes[attr]);
+  }
+
+  if (attributes.innerHTML) el.innerHTML = attributes.innerHTML;
+
+  return el;
+}
+
+(function init() {
+  els.createButton.addEventListener('click', onCreate);
+  els.deleteButton.addEventListener('click', onDelete);
+  els.executeButton.addEventListener('click', onExecute);
+  els.contentNameInput.addEventListener('input', onNameChange);
+  els.contentHostnameInput.addEventListener('input', onHostnameChange);
+  els.contentModeSelect.addEventListener('input', onModeChange);
+  editor.on('change', onContentChange);
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function(v) {
+    state.activeTab = v[0];
+    state.activeHost = new URL(state.activeTab.url).host;
+    loadScripts();
+  });
+})();
