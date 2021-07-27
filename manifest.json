@@ -10,7 +10,6 @@
     "tabs",
     "http://*/",
     "https://*/",
-    "menus",
     "contextMenus"
   ],
   "background": {
@@ -21,12 +20,6 @@
   },
   "browser_action": {
     "default_popup": "popup.html"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{0beb8936-6e0d-4284-a1e8-567059cfb3b3}",
-      "strict_min_version": "42.0"
-    }
   },
   "manifest_version": 2
 }
