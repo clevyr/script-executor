@@ -84,5 +84,6 @@ function debounce(func, delay) {
 }
 
 function doesHostnameMatch(hostname, pattern) {
-  return !!new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$').exec(hostname);
+  return pattern.split(',')
+    .some(v => !!new RegExp('^' + v.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$').exec(hostname));
 }
