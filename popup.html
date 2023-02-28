@@ -11,7 +11,7 @@
     <div class="scripts-header">
       <div class="scripts-header-title">Scripts</div>
       <div class="scripts-header-action action-create">
-        <svg height="8pt" viewBox="0 0 448 448" width="8pt" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg>
+        <svg height="8pt" viewBox="0 0 448 448" width="8pt" xmlns="http://www.w3.org/2000/svg"><path d="M408 184H272a8 8 0 0 1-8-8V40c0-22.09-17.91-40-40-40s-40 17.91-40 40v136a8 8 0 0 1-8 8H40c-22.09 0-40 17.91-40 40s17.91 40 40 40h136a8 8 0 0 1 8 8v136c0 22.09 17.91 40 40 40s40-17.91 40-40V272a8 8 0 0 1 8-8h136c22.09 0 40-17.91 40-40s-17.91-40-40-40zm0 0"/></svg>
       </div>
     </div>
     <div class="scripts-list"></div>
@@ -20,10 +20,10 @@
     <div class="content-header">
       <input class="content-header-title" placeholder="Script Name" />
       <div class="content-header-action action-execute">
-        <svg xmlns="http://www.w3.org/2000/svg" height="8pt" width="8pt" viewBox="0 0 430 430"><path d="M405.284,201.188L130.804,13.28C118.128,4.596,105.356,0,94.74,0C74.216,0,61.52,16.472,61.52,44.044v406.124j c0,27.54,12.68,43.98,33.156,43.98c10.632,0,23.2-4.6,35.904-13.308l274.608-187.904c17.66-12.104,27.44-28.392,27.44-45.884 C432.632,229.572,422.964,213.288,405.284,201.188z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" height="8pt" width="8pt" viewBox="0 0 430 430"><path d="M405.284 201.188 130.804 13.28C118.128 4.596 105.356 0 94.74 0 74.216 0 61.52 16.472 61.52 44.044v406.124"/></svg>
       </div>
       <div class="content-header-action action-delete">
-        <svg height="8pt" viewBox="-48 0 407 407" width="8pt" xmlns="http://www.w3.org/2000/svg"><path d="m89.199219 37c0-12.132812 9.46875-21 21.601562-21h88.800781c12.128907 0 21.597657 8.867188 21.597657 21v23h16v-23c0-20.953125-16.644531-37-37.597657-37h-88.800781c-20.953125 0-37.601562 16.046875-37.601562 37v23h16zm0 0"/><path d="m60.601562 407h189.199219c18.242188 0 32.398438-16.046875 32.398438-36v-247h-254v247c0 19.953125 14.15625 36 32.402343 36zm145.597657-244.800781c0-4.417969 3.582031-8 8-8s8 3.582031 8 8v189c0 4.417969-3.582031 8-8 8s-8-3.582031-8-8zm-59 0c0-4.417969 3.582031-8 8-8s8 3.582031 8 8v189c0 4.417969-3.582031 8-8 8s-8-3.582031-8-8zm-59 0c0-4.417969 3.582031-8 8-8s8 3.582031 8 8v189c0 4.417969-3.582031 8-8 8s-8-3.582031-8-8zm0 0"/><path d="m20 108h270.398438c11.046874 0 20-8.953125 20-20s-8.953126-20-20-20h-270.398438c-11.046875 0-20 8.953125-20 20s8.953125 20 20 20zm0 0"/></svg>
+        <svg height="8pt" viewBox="-48 0 407 407" width="8pt" xmlns="http://www.w3.org/2000/svg"><path d="M89.2 37c0-12.133 9.468-21 21.6-21h88.802c12.128 0 21.597 8.867 21.597 21v23h16V37c0-20.953-16.644-37-37.597-37H110.8C89.848 0 73.199 16.047 73.199 37v23h16zM60.602 407H249.8c18.242 0 32.398-16.047 32.398-36V124h-254v247c0 19.953 14.156 36 32.403 36zm145.597-244.8a8 8 0 0 1 16 0v189a8 8 0 0 1-16 0zm-59 0a8 8 0 0 1 16 0v189a8 8 0 0 1-16 0zm-59 0a8 8 0 0 1 16 0v189a8 8 0 0 1-16 0zM20 108h270.398c11.047 0 20-8.953 20-20s-8.953-20-20-20H20C8.953 68 0 76.953 0 88s8.953 20 20 20zm0 0"/></svg>
       </div>
     </div>
     <div class="content-editor">
@@ -33,8 +33,10 @@
       <input class="content-footer-hostname" type="text" placeholder="Hostname pattern">
       <select class="content-footer-mode" dir="rtl">
         <option value="none">None</option>
-        <option value="pageload">Page Load</option>
         <option value="context">Context Item</option>
+        <option value="pageload">Page Load</option>
+        <option value="1 seconds">Every Second</option>
+        <option value="20 seconds">Every 20 Seconds</option>
       </select>
     </div>
   </div>

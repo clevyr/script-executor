@@ -1,6 +1,6 @@
 {
   "name": "Script Executor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Executed scripts on a page",
   "permissions": [
     "activeTab",
@@ -10,7 +10,8 @@
     "tabs",
     "http://*/",
     "https://*/",
-    "contextMenus"
+    "contextMenus",
+    "alarms"
   ],
   "background": {
     "scripts": [
